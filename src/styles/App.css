@@ -1,0 +1,26 @@
+.article-item {
+    padding-top: 0.125em;
+    padding-bottom: 0.125em;
+    background-color: #efefef;
+}
+
+.article-item-id {
+    flex-basis: 3em;
+}
+
+.pagination-row {
+    padding-top: 0.25em;
+    background-color: #efefef;   
+}
+
+.footer {
+    border-top: 0.15em black solid;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background-color: #efefef;
+}
+
+.search-textbox {
+    padding-top: 0.5em;
+    background-color: #efefef;
+}
