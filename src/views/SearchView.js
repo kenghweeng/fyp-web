@@ -11,13 +11,31 @@ class SearchView extends Component {
             articles: []
         }
 
-        this.fetchArticle              = this.fetchArticle.bind(this);
-        this.handleSearchQueryChanged  = this.handleSearchQueryChanged.bind(this);
-        this.handleSearchButtonClicked = this.handleSearchButtonClicked.bind(this);
+        this.fetchArticles               = this.fetchArticles.bind(this);
+        this.handleSearchQueryKeyPressed = this.handleSearchQueryKeyPressed.bind(this);
+        this.handleSearchQueryChanged    = this.handleSearchQueryChanged.bind(this);
+        this.handleSearchButtonClicked   = this.handleSearchButtonClicked.bind(this);
     }
 
-    async fetchArticle() {
-        return
+    async componentWillMount() {
+        const url = new URL(window.location.href);
+    
+        let searchQuery = null
+        if (url.searchParams.get("q") !== null) {
+            searchQuery = url.searchParams.get("q")
+        }
+
+        if (searchQuery !== null) {
+            this.setState({
+                searchQuery: searchQuery
+            })
+            const articles = await this.fetchArticles(searchQuery)
+            this.setState({articles: articles})
+        }
+    }
+
+    async fetchArticles(query) {
+        return await Articles.searchArticles(query)
     }
 
     handleSearchQueryChanged(event) {
@@ -26,9 +44,16 @@ class SearchView extends Component {
         });
     }
 
+    async handleSearchQueryKeyPressed(event) {
+        if(event.key == 'Enter'){
+            await this.handleSearchButtonClicked()
+        }
+    }
+
     async handleSearchButtonClicked(event) {
-        const articles = await Articles.searchDocuments(this.state.searchQuery)
+        const articles = await this.fetchArticles(this.state.searchQuery)
         this.setState({articles: articles})
+        this.props.history.push(`/search/?q=${this.state.searchQuery}`)
     }
 
     renderSearchTextbox() {
@@ -37,6 +62,7 @@ class SearchView extends Component {
                 <input type="text" className="form-control" 
                 value={this.state.searchQuery}
                 onChange={this.handleSearchQueryChanged}
+                onKeyPress={this.handleSearchQueryKeyPressed}
                 placeholder="Search Query" 
                 aria-label="Search query" />
                 <div className="input-group-append">
@@ -53,7 +79,7 @@ class SearchView extends Component {
         return (
             <div className="container-fluid">
                 <div className="row search-textbox">
-                    <div className="col-5">
+                    <div className="col-12">
                         {this.renderSearchTextbox()}        
                     </div>
                 </div>

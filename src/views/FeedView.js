@@ -24,7 +24,7 @@ class FeedView extends Component {
             page = Number(url.searchParams.get("p"))
         }
 
-        const articles = await Articles.searchAllDocuments(page);
+        const articles = await Articles.retrieveArticles(page);
         this.setState({ 
             page: page,
             articles: articles 
@@ -33,7 +33,7 @@ class FeedView extends Component {
 
     async paginationNextOnClicked() {
         const newPage = this.state.page + 1;
-        const articles = await Articles.searchAllDocuments(newPage);
+        const articles = await Articles.retrieveArticles(newPage);
         this.setState({ 
             articles: articles,
             page: newPage
@@ -43,7 +43,7 @@ class FeedView extends Component {
     
     async paginationPrevOnClicked() {
         const newPage = this.state.page - 1;
-        const articles = await Articles.searchAllDocuments(newPage);
+        const articles = await Articles.retrieveArticles(newPage);
         this.setState({ 
             articles: articles,
             page: newPage

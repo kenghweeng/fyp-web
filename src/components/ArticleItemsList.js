@@ -12,22 +12,22 @@ class ArticleItemsList extends Component {
         const currentDate = moment()
 
         for (let article of this.props.articles) {
-            const publishedDate = moment(article._source.publishedDate)
+            const publishedDate = moment(article.publishedDate)
             const item = (
-                <div key={article._source.url} className="row article-item">
+                <div key={article.url} className="row article-item">
                     <div className="col-1 article-item-id">
                         <span className="text-secondary">&nbsp;&nbsp;{id}.</span>
                     </div>
                     <div className="col-11">
                     <span>
                         <span>
-                            <Link to={`/article/${article._id}`} className="text-decoration-none font-weight-light text-dark"> 
-                                {article._source.title} 
+                            <Link to={`/article/${article._id}`} className="text-decoration-none text-dark"> 
+                                {article.title} 
                             </Link>
                             &nbsp;
                             <span className="text-lowercase">
-                                <a className="text-secondary font-weight-light" target="_blank" href={article._source.url}>
-                                    ({article._source.source})
+                                <a className="text-secondary font-weight-light" target="_blank" href={article.url}>
+                                    ({article.source})
                                 </a>
                             </span>
                         </span>

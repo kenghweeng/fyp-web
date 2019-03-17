@@ -5,10 +5,10 @@ class Footer extends Component {
     
     render() {
       return (
-        <div className="container-fluid">
+        <div className="footer container-fluid">
             <div className="row">
                 <div className="col-12 text-center footer">
-                    © 2019 National University of Singapore; W.H. Desmond Ang
+                    © Pinocchio App
                 </div>
             </div>
         </div>

@@ -3,16 +3,12 @@ import { Link } from "react-router-dom";
 
 const navigation = [
     {
-        title: "Search",
-        link: "/search"
+        title: "About",
+        link: "/about"
     },
     {
-        title: "Analyse",
-        link: "/analyse"
-    },
-    {
-        title: "Survey",
-        link: "/survey"
+        title: "Feedback",
+        link: "/feedback"
     },
 ]
 
@@ -21,35 +17,32 @@ class Navbar extends Component {
 
     generateNavLinks() {
         const navLinks = navigation.map(nav => {
-            const className = "nav-link "
+            const className = ""
             if (window.location.pathname.indexOf(nav.title) === 0) {
                 className = className + "active"
             }
             return (
-                <li className="nav-item" key={nav.title}>
-                    <Link to={nav.link} className={className}>{nav.title}</Link>
-                </li>
+                <Link key={nav.title} to={nav.link} className={className}>{nav.title}</Link>
             )
         })
         return navLinks;
     }
-    
+
     render() {
       return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <Link className="navbar-brand" to="/">Pinocchio</Link>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
+          <div className="container">
+            <div className="nav-row">
+                <div className="nav-row-logo">
+                    <Link to="/">Pinocchio</Link>
+                </div>
+                <div className="nav-row-links">
                     {this.generateNavLinks()}
-                </ul>
+                </div>
             </div>
-        </nav>
+          </div>
       );
     }
-  }
+}
   
-  export default Navbar;
+export default Navbar;
   

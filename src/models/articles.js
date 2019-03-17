@@ -1,83 +1,108 @@
-const elasticsearch = require('elasticsearch');
-const client = new elasticsearch.Client({
-    host: 'http://128.199.101.98:9200',
-});
+const DEV_API_ROOT = "http://localhost:9000"
+const PROD_API_ROOT = "http://localhost:9000"
 
+const API_ROOT = process.env.PROD ? PROD_API_ROOT : DEV_API_ROOT;
 const PAGE_SIZE = 30
 
-// Page should start from 0
-const searchAllDocuments = async (page) => {
-    const pageStart = page * PAGE_SIZE;
-
-    const response = await client.search({
-        index: 'articles',
-        type: '_doc',
-        size: PAGE_SIZE,
-        from: pageStart,
-        body: {
-            query: {
-                match_all: {}
-            }
-        }
-    });
-
-    return response.hits.hits;
+const ARTICLE_SOURCE_MAP = {
+    "Channelnewsasia.com": 1,
+    "todayonline.com": 2,
+    "Straitstimes.com": 3,
 }
 
-const searchDocuments = async (query) => {
-    const response = await client.search({
-        index: 'articles',
-        type: '_doc',
-        size: PAGE_SIZE,
-        body: {
-            query: {
-                bool: {
-                    should: [
-                      {
-                        match: {
-                          title: {
-                            query: query,
-                            boost: 5
-                          }
-                        }
-                      },
-                      {
-                        match: {
-                          content: {
-                            query: query,
-                            boost: 3
-                          }
-                        }
-                      }
-                    ]
-                }
-            }
+const retrieveArticles = async (page) => {
+    const fetchURL = API_ROOT + `/api/articles?page=${page}`
+    const fetchOptions = {
+        method: "GET",
+        headers: {
+           mode: "no-cors"
         }
-    });
-
-    return response.hits.hits;
+    }
+    const response = await fetch(fetchURL, fetchOptions)
+    const json = await response.json()
+    const articles = json.data;
+    return articles;
 }
 
 const searchArticleById = async (id) => {
-    const response = await client.search({
-        index: 'articles',
-        type: '_doc',
-        body: {
-            query: {
-                match: {
-                    "_id": id
-                }
-            }
+    const fetchURL = API_ROOT + `/api/article/${id}`
+    const fetchOptions = {
+        method: "GET",
+        headers: {
+           mode: "no-cors"
         }
-    });
-    return response.hits.hits[0]
+    }
+    const response = await fetch(fetchURL, fetchOptions)
+    const json = await response.json()
+    const article = json.data;
+    return article;
+}
+
+const searchArticles = async (query) => {
+    const fetchURL = API_ROOT + "/api/articles/search";
+    
+    const fetchBody = {
+        query: query
+    }
+    
+    const fetchOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            mode: "no-cors"
+        },
+        body: JSON.stringify(fetchBody)
+    }
+    const response = await fetch(fetchURL, fetchOptions)
+    const json = await response.json()
+    const articles = json.data;
+    return articles;
+}
+
+
+const searchRelatedArticlesById = async (id) => {
+    const fetchURL = API_ROOT + `/api/articles/${id}/related-articles`;
+    const fetchOptions = {
+        method: "GET",
+        headers: {
+           mode: "no-cors"
+        }
+    }
+    const response = await fetch(fetchURL, fetchOptions)
+    const json = await response.json()
+    const articles = json.data;
+    return articles;
+}
+
+
+
+const searchRelatedArticlesBySentence = async (sentence) => {
+    const fetchURL = API_ROOT + `/api/articles/search-sentence`;
+
+    const fetchBody = {
+        sentence: sentence
+    }
+
+    const fetchOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            mode: "no-cors"
+        },
+        body: JSON.stringify(fetchBody)
+    }
+    const response = await fetch(fetchURL, fetchOptions)
+    const json = await response.json()
+    const articles = json.data;
+    return articles;
 }
 
 export default {
     PAGE_SIZE,
-    searchAllDocuments,
-    searchDocuments,
-    searchArticleById
+    ARTICLE_SOURCE_MAP,
+    retrieveArticles,
+    searchArticles,
+    searchArticleById,
+    searchRelatedArticlesById,
+    searchRelatedArticlesBySentence,
 }
-
-
