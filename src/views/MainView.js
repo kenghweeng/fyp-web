@@ -4,6 +4,9 @@ import EvidenceItem from '../components/EvidenceItem'
 
 import Analyse from '../models/analyse';
 
+const ENTAILMENT_SCORE_INDEX    = 0;
+const CONTRADICTION_SCORE_INDEX = 1;
+const NEUTRAL_SCORE_INDEX       = 2;
 class MainView extends Component {
 
     constructor(props) {
@@ -25,6 +28,7 @@ class MainView extends Component {
 
     async fetchAnalysis(analyseQuery) {
         const analyseData = await Analyse.analyseText(analyseQuery);
+        console.log(analyseData)
         return analyseData;
     }
 
@@ -67,30 +71,35 @@ class MainView extends Component {
         }
 
         const renderTrustScore = () => {
-            let supportingScore = 0
-            let opposingScore = 0
+            let entailmentScore = []
+            let contradictionScore = []
 
-            for (const evidence of this.state.analyseResult.supporting) {
-                supportingScore = supportingScore + evidence[1];
+            for (const article of this.state.analyseResult) {
+                for (const entailmentClaim of article.evidence.entailment) {
+                    entailmentScore.push(entailmentClaim.score[ENTAILMENT_SCORE_INDEX])
+                }
+                for (const contradictClaim of article.evidence.contradiction) {
+                    contradictionScore.push(contradictClaim.score[CONTRADICTION_SCORE_INDEX])
+                }
             }
-            if (this.state.analyseResult.supporting.length > 0) {
-                supportingScore = supportingScore / this.state.analyseResult.supporting.length
+
+            if (entailmentScore.length > 0) {
+                const totalScore = entailmentScore.reduce((a, b) => { return a + b}, 0) / entailmentScore.length;
+                entailmentScore = totalScore
+            }
+
+            if (contradictionScore.length > 0) {
+                const totalScore = contradictionScore.reduce((a, b) => { return a + b}, 0) / contradictionScore.length;
+                contradictionScore = totalScore
             }
             
-            
-            for (const evidence of this.state.analyseResult.opposing) {
-                opposingScore = opposingScore + evidence[1];
-            }
-            if (this.state.analyseResult.opposing.length > 0) {
-                opposingScore = opposingScore / this.state.analyseResult.opposing.length
-            }
-            
-            const finalScore = Math.ceil((supportingScore - opposingScore) * 100) 
+            const finalScore = Math.ceil((entailmentScore - contradictionScore) * 100) 
+
 
             let trustScoreColor;
-            if (finalScore >= 80) {
+            if (finalScore >= 75) {
                 trustScoreColor = "green"
-            } else if (finalScore >= 40) {
+            } else if (finalScore >= -40) {
                 trustScoreColor = "black"
             } else {
                 trustScoreColor = "red"
@@ -110,13 +119,19 @@ class MainView extends Component {
             );
         }
 
-        const renderSupportingEvidence = () => {
+        const renderEntailmentEvidence = () => {
             const items = [];
-            const uniqueSupportingArticles = _.uniqBy(this.state.analyseResult.supporting, (e) => {
-                return e[2].url
-            })
-            for (const [index, evidence] of uniqueSupportingArticles.entries()) {
-                items.push(<EvidenceItem key={index} evidence={evidence[2]} />)
+            
+            for (const [index, article] of this.state.analyseResult.entries()) {
+                if (article.evidence.entailment.length <= 0)
+                    continue
+                
+                items.push(
+                    <EvidenceItem key={index} 
+                        evidence={article} 
+                        relatedClaims={article.evidence.entailment}
+                    />
+                );
             }
 
             return (
@@ -129,13 +144,19 @@ class MainView extends Component {
             );
         }
 
-        const renderOpposingEvidence = () => {
+        const renderContradictionEvidence = () => {
             const items = [];
-            const uniqueOpposingArticles = _.uniqBy(this.state.analyseResult.opposing, (e) => {
-                return e[2].url
-            })
-            for (const [index, evidence] of uniqueOpposingArticles.entries()) {
-                items.push(<EvidenceItem key={index} evidence={evidence[2]} />)
+            
+            for (const [index, article] of this.state.analyseResult.entries()) {
+                if (article.evidence.contradiction.length <= 0)
+                    continue
+                
+                items.push(
+                    <EvidenceItem key={index} 
+                        evidence={article} 
+                        relatedClaims={article.evidence.contradiction}
+                    />
+                );
             }
 
             return (
@@ -152,7 +173,7 @@ class MainView extends Component {
             return this.renderAnalysingLoader();
         }
 
-        if (this.state.analyseResult.relatedArticles === undefined) {
+        if (this.state.analyseResult.query === undefined) {
             return null
         }
 
@@ -162,9 +183,9 @@ class MainView extends Component {
                 {renderQuery()}
                 {renderTrustScore()}
                 <hr />
-                {renderSupportingEvidence()}
+                {renderEntailmentEvidence()}
                 <hr />
-                {renderOpposingEvidence()}
+                {renderContradictionEvidence()}
 
             </div>
         )
