@@ -1,7 +1,7 @@
 const DEV_API_ROOT = "http://localhost:9000"
 const PROD_API_ROOT = "http://www.pinocchionews.com:9000"
 
-const API_ROOT = process.env.PROD ? PROD_API_ROOT : DEV_API_ROOT;
+const API_ROOT = process.env.NODE_ENV === "production" ? PROD_API_ROOT : DEV_API_ROOT;
 const PAGE_SIZE = 30
 
 const ARTICLE_SOURCE_MAP = {

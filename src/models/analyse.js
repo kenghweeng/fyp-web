@@ -1,9 +1,7 @@
 const DEV_API_HOST  = "http://localhost:9000";
 const PROD_API_HOST = "http://www.pinocchionews.com:9000";
-const HOST          = process.env.prod ? PROD_API_HOST : DEV_API_HOST;
+const HOST          = process.env.NODE_ENV === "production" ? PROD_API_HOST : DEV_API_HOST;
 
-console.log(process.env)
-console.log(HOST)
 
 const analyseText = async (text) => {
     const fetchURL = HOST + `/api/analyse`
