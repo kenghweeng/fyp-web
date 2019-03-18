@@ -76,6 +76,11 @@ class MainView extends Component {
         })
     }
 
+
+    handleChromeExtensionButtonOnClicked(event) {
+        window.open("https://chrome.google.com/webstore/detail/pinocchio-news/ffdhkmfojfhdclcekhjohjalhccnceja",'_blank');
+    }
+
     renderAnalysingLoader() {
         return (
             <div className="text-analyse-result-loader">
@@ -231,7 +236,8 @@ class MainView extends Component {
                         <img width="50px" height="50px" src='https://img.icons8.com/dusk/2x/reddit.png' /> &nbsp;&nbsp;&nbsp;
                     </div>
                     
-                    <button className="chrome-extension-download-btn">CHROME EXTENSION</button>
+                    <button onClick={this.handleChromeExtensionButtonOnClicked}
+                        className="chrome-extension-download-btn">CHROME EXTENSION</button>
                 </section>
 
                 <section className="container text-analyse-container">
