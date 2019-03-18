@@ -102,16 +102,16 @@ rem is only relative to the html (root) font-size.
 
 .text-analyse-result .text-analyse-result-query-content {
     padding-left: 1em;
-    flex-basis: 80%;
     text-align: justify;
+    flex-basis: 80%;
 }
 
+.text-analyse-result .text-analyse-result-evidence-content {
+    padding-left: 1em;
+    flex-basis: 80%;
+}
 
 /* Evidence Item */
-.text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item {
-    padding-left: 1em;
-}
-
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-source {
     font-size: 0.55em;
 }
@@ -126,6 +126,11 @@ rem is only relative to the html (root) font-size.
 
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-time {
     font-size: 0.55em;
+}
+
+.text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-sentence {
+    font-size: 0.55em;
+    text-align: justify;
 }
 
 /* Footer */

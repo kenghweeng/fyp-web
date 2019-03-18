@@ -90,6 +90,7 @@ class MainView extends Component {
     }
 
     renderAnalyseResult() {
+        console.log(this.state.analyseResult)
         const renderQuery = () => {
             return (
                 <div className="text-analyse-result-row">
@@ -112,17 +113,17 @@ class MainView extends Component {
                 }
             }
 
-            if (entailmentScore.length > 0) {
-                const totalScore = entailmentScore.reduce((a, b) => { return a + b}, 0) / entailmentScore.length;
-                entailmentScore = totalScore
-            }
+            const totalEntailmentScore = entailmentScore.reduce((a, b) => { return a + b}, 0);
+            const totalContradictionScore = contradictionScore.reduce((a, b) => { return a + b}, 0);
 
-            if (contradictionScore.length > 0) {
-                const totalScore = contradictionScore.reduce((a, b) => { return a + b}, 0) / contradictionScore.length;
-                contradictionScore = totalScore
+            console.log(totalEntailmentScore)
+            console.log(totalContradictionScore)
+
+            let finalScore = 0; 
+            if (entailmentScore.length > 0 || contradictionScore.length > 0) {
+                const numElements = entailmentScore.length + contradictionScore.length;
+                finalScore =  Math.ceil((totalEntailmentScore - totalContradictionScore) / numElements * 100) 
             }
-            
-            const finalScore = Math.ceil((entailmentScore - contradictionScore) * 100) 
 
 
             let trustScoreColor;

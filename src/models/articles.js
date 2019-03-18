@@ -8,6 +8,7 @@ const ARTICLE_SOURCE_MAP = {
     "Channelnewsasia.com": 1,
     "todayonline.com": 2,
     "Straitstimes.com": 3,
+    "Scmp.com": 4
 }
 
 const retrieveArticles = async (page) => {

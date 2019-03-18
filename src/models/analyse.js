@@ -19,8 +19,6 @@ const analyseText = async (text) => {
         body: JSON.stringify(fetchBody)
     }
 
-    
-
     const response = await fetch(fetchURL, fetchOptions)
     const json = await response.json()
     const data = json.data;
