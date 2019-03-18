@@ -26,9 +26,33 @@ class MainView extends Component {
         this.renderAnalyseResult   = this.renderAnalyseResult.bind(this);
     }
 
+    async componentWillMount() {
+        const url = new URL(window.location.href);
+    
+        let analyseQuery = null
+        if (url.searchParams.get("q") !== null) {
+            analyseQuery = url.searchParams.get("q")
+        }
+
+        if (analyseQuery !== null) {
+            this.setState({
+                analyseQuery: analyseQuery
+            })
+            this.setState({ 
+                isAnalysing: true
+            })
+
+            const analyseResult = await this.fetchAnalysis(analyseQuery);
+            analyseResult.query = analyseQuery;
+            this.setState({ 
+                isAnalysing: false,
+                analyseResult: analyseResult
+            });
+        }
+    }
+
     async fetchAnalysis(analyseQuery) {
         const analyseData = await Analyse.analyseText(analyseQuery);
-        console.log(analyseData)
         return analyseData;
     }
 
