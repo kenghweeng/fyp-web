@@ -35,11 +35,10 @@ class EvidenceItem extends Component {
 
         return (
             <article className="evidence-item">
-                <div>
+                <div className="evidence-item-source">
                     <img width="20px" height="20px" src={articleSourceImageURL} />
-                    <span className="evidence-item-source">{articleSourceName}</span>
+                    <span>{articleSourceName}</span>
                 </div>
-
                 <a className="evidence-item-title" href={this.props.evidence.url} target="_blank">{this.props.evidence.title}</a>
                 <p className="evidence-item-time">{publishedDate}</p>
 

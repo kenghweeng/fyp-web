@@ -60,7 +60,7 @@ rem is only relative to the html (root) font-size.
 }
 
 .text-analyse-container .text-analyse-input-section .text-analyse-textarea {
-    flex-basis: 80%;
+    flex-basis: 85%;
     margin-right: 1em;
 }
 
@@ -70,6 +70,9 @@ rem is only relative to the html (root) font-size.
 }
 
 .text-analyse-container .text-analyse-input-section  .text-analyse-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     max-height: 2em;
     padding: 0.5rem 2rem 2rem 2rem;
     font-family: 'Sniglet', cursive;
@@ -92,15 +95,16 @@ rem is only relative to the html (root) font-size.
 
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row {
     display: flex;
-    font-size: 1.5em;
 }
 
 .text-analyse-result .text-analyse-result-query-label {
     font-family: 'Sniglet', cursive;
+    font-size: 1.5rem;
     flex-basis: 20%;
 }
 
 .text-analyse-result .text-analyse-result-query-content {
+    font-size: 1.5em;
     padding-left: 1em;
     text-align: justify;
     flex-basis: 80%;
@@ -113,23 +117,23 @@ rem is only relative to the html (root) font-size.
 
 /* Evidence Item */
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-source {
-    font-size: 0.55em;
+    font-size: 1rem;
+    margin-bottom: 0.5em;
 }
 
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-title {
-    font-size: 0.75em;
-    margin-top: 0;
-    margin-bottom: 0;
+    padding-top: 1em;
+    font-size: 1.25rem;
     font-weight: 600;
     text-decoration: none;
 }
 
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-time {
-    font-size: 0.55em;
+    font-size: 1rem;
 }
 
 .text-analyse-container .text-analyse-result-section .text-analyse-result-row .evidence-item .evidence-item-sentence {
-    font-size: 0.55em;
+    font-size: 1em;
     text-align: justify;
 }
 
@@ -141,6 +145,12 @@ rem is only relative to the html (root) font-size.
     /* Set the fixed height of the footer here */
     height: 60px;
     line-height: 60px; /* Vertically center the text there */
+}
+
+
+/* Tutorial */
+.tutorial .tutorial-pattern {
+    text-align: center;
 }
 
 /* Article */

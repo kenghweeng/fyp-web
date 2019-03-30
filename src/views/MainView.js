@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import _ from 'lodash'
+
+import Tutorial from '../components/Tutorial';
 import EvidenceItem from '../components/EvidenceItem'
 
 import Analyse from '../models/analyse';
@@ -91,6 +93,7 @@ class MainView extends Component {
 
     renderAnalyseResult() {
         console.log(this.state.analyseResult)
+
         const renderQuery = () => {
             return (
                 <div className="text-analyse-result-row">
@@ -101,31 +104,22 @@ class MainView extends Component {
         }
 
         const renderTrustScore = () => {
-            let entailmentScore = []
-            let contradictionScore = []
+            const totalNumberOfArticles = this.state.analyseResult.articlesWithEvidence.length
+            
+            let entailingArticles     = 0
+            let contradictingArticles = 0
 
-            for (const article of this.state.analyseResult) {
-                for (const entailmentClaim of article.evidence.entailment) {
-                    entailmentScore.push(entailmentClaim.score[ENTAILMENT_SCORE_INDEX])
+            for (const article of this.state.analyseResult.articlesWithEvidence) {
+                if (article.evidence.entailment.length > 0) {
+                    entailingArticles += 1
                 }
-                for (const contradictClaim of article.evidence.contradiction) {
-                    contradictionScore.push(contradictClaim.score[CONTRADICTION_SCORE_INDEX])
+                if (article.evidence.contradiction.length > 0) {
+                    contradictingArticles += 1
                 }
             }
 
-            const totalEntailmentScore = entailmentScore.reduce((a, b) => { return a + b}, 0);
-            const totalContradictionScore = contradictionScore.reduce((a, b) => { return a + b}, 0);
-
-            console.log(totalEntailmentScore)
-            console.log(totalContradictionScore)
-
-            let finalScore = 0; 
-            if (entailmentScore.length > 0 || contradictionScore.length > 0) {
-                const numElements = entailmentScore.length + contradictionScore.length;
-                finalScore =  Math.ceil((totalEntailmentScore - totalContradictionScore) / numElements * 100) 
-            }
-
-
+            let finalScore = Math.ceil((entailingArticles - contradictingArticles) / totalNumberOfArticles) * 100
+            
             let trustScoreColor;
             if (finalScore >= 75) {
                 trustScoreColor = "green"
@@ -152,7 +146,7 @@ class MainView extends Component {
         const renderEntailmentEvidence = () => {
             const items = [];
             
-            for (const [index, article] of this.state.analyseResult.entries()) {
+            for (const [index, article] of this.state.analyseResult.articlesWithEvidence.entries()) {
                 if (article.evidence.entailment.length <= 0)
                     continue
                 
@@ -177,7 +171,7 @@ class MainView extends Component {
         const renderContradictionEvidence = () => {
             const items = [];
             
-            for (const [index, article] of this.state.analyseResult.entries()) {
+            for (const [index, article] of this.state.analyseResult.articlesWithEvidence.entries()) {
                 if (article.evidence.contradiction.length <= 0)
                     continue
                 
@@ -205,6 +199,14 @@ class MainView extends Component {
 
         if (this.state.analyseResult.query === undefined) {
             return null
+        }
+
+        if (!this.state.analyseResult.queryHasClaims) {
+            return (
+                <div className="text-analyse-result">
+                    <Tutorial />
+                </div>
+            )
         }
 
         return (
@@ -245,7 +247,7 @@ class MainView extends Component {
                     <section className="text-analyse-input-section">
                         <article className="text-analyse-textarea">
                             <textarea 
-                                placeholder="Copy some text from anywhere on the web to try!" 
+                                placeholder="Copy some news from anywhere on the web to try!" 
                                 className="form-control" rows="4"
                                 onChange={this.handleTextAreaOnChanged}
                                 value={this.state.analyseQuery}

@@ -8,7 +8,7 @@ class Footer extends Component {
         <div className="footer container-fluid">
             <div className="row">
                 <div className="col-12 text-center footer">
-                    © Pinocchio App
+                    © Pinocchio News App
                 </div>
             </div>
         </div>
