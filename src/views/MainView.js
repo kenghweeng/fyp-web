@@ -64,6 +64,7 @@ class MainView extends Component {
         })
 
         const analyseResult = await this.fetchAnalysis(this.state.analyseQuery);
+        console.log(analyseResult)
         analyseResult.query = this.state.analyseQuery;
         this.setState({ 
             isAnalysing: false,
@@ -92,8 +93,6 @@ class MainView extends Component {
     }
 
     renderAnalyseResult() {
-        console.log(this.state.analyseResult)
-
         const renderQuery = () => {
             return (
                 <div className="text-analyse-result-row">
@@ -106,24 +105,37 @@ class MainView extends Component {
         const renderTrustScore = () => {
             const totalNumberOfArticles = this.state.analyseResult.articlesWithEvidence.length
             
-            let entailingArticles     = 0
-            let contradictingArticles = 0
-
+            let totalScore    = 0
+            let numEntails    = 0
+            let numNeutral    = 0
+            let numContradict = 0
+            
             for (const article of this.state.analyseResult.articlesWithEvidence) {
-                if (article.evidence.entailment.length > 0) {
-                    entailingArticles += 1
+                for (const evidence of article.evidence.entailment) {
+                    totalScore += evidence.score[0]
+                    numEntails += 1
                 }
-                if (article.evidence.contradiction.length > 0) {
-                    contradictingArticles += 1
+                    
+                for (const evidence of article.evidence.contradiction) {
+                    totalScore += evidence.score[1]
+                    numContradict += 1
+                }
+                    
+                for (const evidence of article.evidence.neutral) {
+                    totalScore += evidence.score[2]
+                    numNeutral += 1
                 }
             }
 
-            let finalScore = Math.ceil((entailingArticles - contradictingArticles) / totalNumberOfArticles) * 100
+            console.log(totalScore)
+            console.log(numContradict + numEntails + numContradict)
+            
+            let finalScore = Math.ceil(totalScore / (numContradict + numEntails + numNeutral) * 100) 
             
             let trustScoreColor;
-            if (finalScore >= 75) {
+            if (finalScore >= 66) {
                 trustScoreColor = "green"
-            } else if (finalScore >= -40) {
+            } else if (finalScore >= 33) {
                 trustScoreColor = "black"
             } else {
                 trustScoreColor = "red"
@@ -135,7 +147,7 @@ class MainView extends Component {
 
             return (
                 <div className="text-analyse-result-row">
-                    <span className="text-analyse-result-query-label">Trust score:</span>
+                    <span className="text-analyse-result-query-label">Confidence:</span>
                     <span className="text-analyse-result-query-content" 
                         style={trustScoreStyle}
                     >{finalScore}%</span>
@@ -193,6 +205,31 @@ class MainView extends Component {
             );
         }
 
+        const renderMaybeEvidence = () => {
+            const items = [];
+            
+            for (const [index, article] of this.state.analyseResult.articlesWithEvidence.entries()) {
+                if (article.evidence.neutral.length <= 0)
+                    continue
+                
+                items.push(
+                    <EvidenceItem key={index} 
+                        evidence={article} 
+                        relatedClaims={article.evidence.neutral}
+                    />
+                );
+            }
+
+            return (
+                <div className="text-analyse-result-row">
+                    <span className="text-analyse-result-query-label">Related:</span>
+                    <span className="text-analyse-result-evidence-content">
+                        {items}
+                    </span>
+                </div>
+            );
+        }
+
         if (this.state.isAnalysing) {
             return this.renderAnalysingLoader();
         }
@@ -218,6 +255,8 @@ class MainView extends Component {
                 {renderEntailmentEvidence()}
                 <hr />
                 {renderContradictionEvidence()}
+                <hr />
+                {renderMaybeEvidence()}
 
             </div>
         )
