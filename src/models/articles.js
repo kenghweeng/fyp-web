@@ -1,4 +1,4 @@
-const API_ROOT = `http://${window.location.origin}:9000`;
+const API_ROOT = `http://${window.location.host}:9000`;
 const PAGE_SIZE = 30
 
 const ARTICLE_SOURCE_MAP = {

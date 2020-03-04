@@ -1,4 +1,4 @@
-const HOST = `http://${window.location.origin}:9000`;
+const HOST = `http://${window.location.host}:9000`;
 
 const analyseText = async (text) => {
   const fetchURL = HOST + `${HOST}/api/analyse`    
