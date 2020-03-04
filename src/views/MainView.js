@@ -121,10 +121,6 @@ class MainView extends Component {
                     numContradict += 1
                 }
                     
-                for (const evidence of article.evidence.neutral) {
-                    totalScore += evidence.score[2]
-                    numNeutral += 1
-                }
             }
 
             console.log(totalScore)
@@ -256,7 +252,6 @@ class MainView extends Component {
                 <hr />
                 {renderContradictionEvidence()}
                 <hr />
-                {renderMaybeEvidence()}
 
             </div>
         )
