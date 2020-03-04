@@ -6,9 +6,9 @@ import App from './App';
 import "./styles/index.css"
 
 const RouteredApplication = (
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 )
 
 ReactDOM.render(RouteredApplication, document.getElementById('root'));
