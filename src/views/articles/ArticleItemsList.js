@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import moment from 'moment'
 
-import Articles from '../models/articles';
+import Articles from '../../models/articles';
 
 class ArticleItemsList extends Component {
-  
+
   renderArticleItems() {
     const articleItems = []
-    let id = this.props.page * Articles.PAGE_SIZE + 1        
+    let id = this.props.page * Articles.PAGE_SIZE + 1
     const currentDate = moment()
-    
+
     for (let article of this.props.articles) {
       const publishedDate = moment(article.publishedDate)
       const item = (
@@ -21,8 +21,8 @@ class ArticleItemsList extends Component {
         <div className="col-11">
           <span>
             <span>
-              <Link to={`/article/${article._id}`} className="text-decoration-none text-dark"> 
-                {article.title} 
+              <Link to={`/article/${article._id}`} className="text-decoration-none text-dark">
+                {article.title}
               </Link>
             &nbsp;
             <span className="text-lowercase">
@@ -31,24 +31,23 @@ class ArticleItemsList extends Component {
               </a>
             </span>
           </span>
-          <br /> 
+          <br />
             <span className="text-secondary font-weight-light">
               {publishedDate.from(currentDate)}
             </span>
           </span>
-          </div>  
+          </div>
         </div>
       );
       id = id + 1
       articleItems.push(item);
     }
-      
+
     return articleItems;
   }
-    
+
   render() {
     return this.renderArticleItems()
   }
-}  
+}
 export default ArticleItemsList;
-  

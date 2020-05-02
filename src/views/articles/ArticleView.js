@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ReactJson from 'react-json-view'
 import moment from 'moment'
 
-import Articles from '../models/articles';
+import Articles from '../../models/articles';
 
 class ArticleView extends Component {
 
@@ -26,7 +26,7 @@ class ArticleView extends Component {
     async componentWillMount() {
         const article         = await this.fetchArticle();
         const relatedArticles = await this.fetchRelatedArticles(article._id);
-        this.setState({ 
+        this.setState({
             article: article,
             relatedArticles: relatedArticles
         });
@@ -45,12 +45,12 @@ class ArticleView extends Component {
     handleParagraphOnClick = async (event) => {
         const paragraphIndex = Number(event.target.getAttribute("data-index"));
         const newSelectedParagraph = paragraphIndex === this.state.selectedParagraph ? -1 : paragraphIndex;
-        
+
         let relatedArticles = []
-        if (newSelectedParagraph === -1) { 
+        if (newSelectedParagraph === -1) {
             // display general related articles
             relatedArticles = await this.fetchRelatedArticles(this.state.article._id);
-        } else { 
+        } else {
             // display sentence related articles
             const sentence = event.target.textContent;
             relatedArticles = await Articles.searchRelatedArticlesBySentence(sentence)
@@ -81,7 +81,7 @@ class ArticleView extends Component {
                         {paragraph}
                     </span>
                 </p>
-                
+
             );
         })
     }
@@ -89,7 +89,7 @@ class ArticleView extends Component {
     renderRelatedArticles() {
         const relatedArticlesCards = []
         const currentDate = moment()
-        
+
         this.state.relatedArticles.forEach(article => {
             const publishedDate = moment(article.publishedDate)
             const render = (
@@ -104,7 +104,7 @@ class ArticleView extends Component {
                         </div>
                     </div>
                 </a>
-                
+
             )
             relatedArticlesCards.push(render)
         })
@@ -130,8 +130,8 @@ class ArticleView extends Component {
             }
         }
         return (
-            <ReactJson src={this.state.article.nlp} 
-                theme="monokai" 
+            <ReactJson src={this.state.article.nlp}
+                theme="monokai"
                 displayDataTypes={false}
                 enableClipboard={false}
                 shouldCollapse={renderJSONViewShouldCollapse}
@@ -155,14 +155,14 @@ class ArticleView extends Component {
                             <strong>Author:</strong> {this.state.article.author}
                         </p>
                         <p>
-                            <strong>Original Source:&nbsp;&nbsp;</strong> 
+                            <strong>Original Source:&nbsp;&nbsp;</strong>
                             <a className="text-lowercase" target="_blank" href={this.state.article.url}>
-                                {this.state.article.source} 
+                                {this.state.article.source}
                             </a>
                         </p>
                         <p></p>
                         {this.renderArticleContent()}
-                        
+
                     </div>
                     <div className="col-12 col-md-12 col-lg-6">
                         {this.renderRelatedArticles()}

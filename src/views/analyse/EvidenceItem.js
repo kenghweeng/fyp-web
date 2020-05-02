@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment'
 
-import Articles from "../models/articles";
+import Articles from "../../models/articles";
 
 const ARTICLE_SOURCE_ICON = {
   1: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Channel_NewsAsia_logo_(shape_only).svg/1200px-Channel_NewsAsia_logo_(shape_only).svg.png",
@@ -21,7 +21,7 @@ class EvidenceItem extends Component {
   renderRelatedClaims() {
     const claims = []
     for (const [index, claim] of this.props.relatedClaims.entries()) {
-        claims.push(<p key={index} className="evidence-item-sentence">{claim.sentence}</p>) 
+        claims.push(<p key={index} className="evidence-item-sentence">{claim.sentence}</p>)
     }
     return claims;
   }
@@ -42,7 +42,7 @@ class EvidenceItem extends Component {
 
         {this.renderRelatedClaims()}
       </article>
-    );    
+    );
   }
 }
 
