@@ -18,6 +18,9 @@ class Navbar extends Component {
         <div className="navbar-brand">
           <Link className="navbar-item has-text-weight-semibold" to="/">Home</Link>
         </div>
+        <div className="navbar-start">
+          <Link className="navbar-item" to="/articles">Feed</Link>
+        </div>
       </nav>
     );
   }

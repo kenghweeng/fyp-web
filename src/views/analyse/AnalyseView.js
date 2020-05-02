@@ -80,9 +80,9 @@ class AnalyseView extends Component {
               Pinocchio
             </h1>
             <p className="subtitle">
-              Pinocchio verifies your claims  against a corpus of COVID-19 news articles published in China,
-              South Korea and Singapore from <span className="has-text-info">31 December 2019</span> to
-              <span className="has-text-info"> 1 March 2020</span>. You can check claims like:
+              Pinocchio verifies your claims  against a corpus of COVID-19 news articles published in
+              China, Hong Kong, South Korea and Singapore from <span className="has-text-info">1 April 2020</span>
+              to <span className="has-text-info"> 30 April 2020</span>. You can check claims like:
             </p>
             <ul style={listStyle}>
               <li>COVID-19 could spread from animals to humans</li>

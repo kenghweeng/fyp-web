@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
+
+import _ from 'lodash';
+import moment from 'moment';
 
 import Articles from '../../models/articles';
-import ArticleItemsList from './ArticleItemsList'
 
 class FeedView extends Component {
   constructor(props) {
@@ -10,6 +13,11 @@ class FeedView extends Component {
         articles: [],
         page: 0
     };
+
+    _.bindAll(this, [
+      'paginationNextOnClick',
+      'paginationPrevOnClick'
+    ]);
   }
 
   async componentWillMount() {
@@ -49,42 +57,63 @@ class FeedView extends Component {
 
   renderPagination() {
     return (
-      <div className="row pagination-row">
-        <div className="col-12">
-          <ul className="pagination">
-            {this.state.page > 0 ?
-              <li className="page-item">
-                  <a
-                    className="page-link text-secondary"
-                    onClick={this.paginationPrevOnClick}
-                  >
-                      Previous
-                  </a>
-              </li>
-            :
-              null
-            }
-            <li className="page-item">
-              <a
-                className="page-link text-secondary"
-                onClick={this.paginationNextOnClick}
-              >
-                  Next
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <ul className="pagination">
+        {this.state.page > 0 ?
+          <li className="page-item">
+            <a
+              className="page-link text-secondary"
+              onClick={this.paginationPrevOnClick}
+            >
+              Previous
+            </a>
+          </li>
+        : null }
+        <li className="page-item">
+          <a
+            className="page-link text-secondary"
+            onClick={this.paginationNextOnClick}
+          >
+            Next
+          </a>
+        </li>
+      </ul>
     )
   }
+
+  renderArticleItems() {
+    const { page, articles } = this.state;
+
+    let id = page * Articles.PAGE_SIZE
+
+    const items = _.map(articles, (article) => {
+      const publishedDate = moment(article.publishedDate)
+      id = id + 1
+      return (
+        <div key={article.url} className="columns">
+          <div className="column">{id}.</div>
+          <div className="column is-11">
+            <span>
+              <Link to={`/article/${article.id}`}>
+              {article.source} || {article.title}
+              </Link>
+            <br />
+            {publishedDate.toDate().toString()}
+            </span>
+          </div>
+        </div>
+      );
+    });
+    return items;
+  }
+
+
   render() {
-    const { articles, page } = this.state;
+    const style = {
+      marginBottom: '10em',
+    }
     return (
-      <div className="container-fluid">
-        <ArticleItemsList
-          articles={articles}
-          page={page}
-        />
+      <div className="container is-fluid" style={style}>
+        {this.renderArticleItems()}
         {this.renderPagination()}
       </div>
     );

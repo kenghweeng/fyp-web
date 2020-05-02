@@ -15,8 +15,7 @@ const listArticles = async (page) => {
   };
   const response = await fetch(fetchURL, fetchOptions)
   const json = await response.json()
-  const articles = json.data;
-  return articles;
+  return json;
 }
 
 const retrieveArticle = async (id) => {
@@ -26,8 +25,7 @@ const retrieveArticle = async (id) => {
   };
   const response = await fetch(fetchURL, fetchOptions);
   const json = await response.json();
-  const article = json.data;
-  return article;
+  return json;
 }
 
 export default {

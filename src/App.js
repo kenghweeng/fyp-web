@@ -17,7 +17,7 @@ class App extends Component {
             <div className="col-12 col-sm-12 col-md-12">
               <Switch>
                 <Route path="/" exact component={AnalyseView}/>
-                <Route path="/feed" component={FeedView}/>
+                <Route path="/articles" component={FeedView}/>
                 <Route path="/article/:id" component={ArticleView}/>
               </Switch>
             </div>
