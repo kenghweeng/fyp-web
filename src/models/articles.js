@@ -1,11 +1,7 @@
 import { API_HOST } from './_api';
 
 const PAGE_SIZE = 30;
-const ARTICLE_SOURCE_MAP = {
-  "Channelnewsasia.com": 1,
-  "todayonline.com": 2,
-  "Straitstimes.com": 3,
-};
+
 
 const listArticles = async (page) => {
   const query = `?page=${page}&page_size=${PAGE_SIZE}`
@@ -30,7 +26,6 @@ const retrieveArticle = async (id) => {
 
 export default {
   PAGE_SIZE,
-  ARTICLE_SOURCE_MAP,
   listArticles,
   retrieveArticle,
 }

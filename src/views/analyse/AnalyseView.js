@@ -13,6 +13,13 @@ class AnalyseView extends Component {
       analyseResult: {},
       isAnalysing: false,
     }
+
+    _.bindAll(this, [
+      'fetchAnalysis',
+      'handleAnalyseButtonOnClicked',
+      'handleTextAreaOnChanged',
+      'handleChromeButtonClick',
+    ])
   }
 
   async componentWillMount() {
@@ -26,15 +33,17 @@ class AnalyseView extends Component {
     if (analyseQuery === null) {
       return;
     }
+
     this.setState({
       analyseQuery: analyseQuery,
       isAnalysing: true
     })
+
     const analyseResult = await this.fetchAnalysis(analyseQuery);
     analyseResult.query = analyseQuery;
     this.setState({
-        isAnalysing: false,
-        analyseResult: analyseResult
+      isAnalysing: false,
+      analyseResult: analyseResult
     });
   }
 
@@ -44,12 +53,24 @@ class AnalyseView extends Component {
   }
 
   async handleAnalyseButtonOnClicked(event) {
+    const { analyseQuery } = this.state;
+
     this.setState({
-        isAnalysing: true,
+      isAnalysing: true,
+      error: null,
     });
 
-    const analyseResult = await this.fetchAnalysis(this.state.analyseQuery);
-    analyseResult.query = this.state.analyseQuery;
+    const analyseResult = await this.fetchAnalysis(analyseQuery);
+
+    if (analyseResult.error) {
+      this.setState({
+        isAnalysing: false,
+        error: analyseResult.error,
+      });
+      return;
+    }
+
+    analyseResult.query = analyseQuery;
     this.setState({
       isAnalysing: false,
       analyseResult: analyseResult
@@ -63,10 +84,17 @@ class AnalyseView extends Component {
   }
 
   handleChromeButtonClick(event) {
-      window.open("https://chrome.google.com/webstore/detail/pinocchio-news/ffdhkmfojfhdclcekhjohjalhccnceja",'_blank');
+    window.open(
+      'https://chrome.google.com/webstore/detail/pinocchio-news/ffdhkmfojfhdclcekhjohjalhccnceja',
+      '_blank'
+    );
   }
 
   renderHeader() {
+    const heroStyle = {
+      padding: '2em 0',
+    };
+
     const listStyle = {
       listStyleType: 'disc',
       paddingLeft: '2em',
@@ -74,15 +102,17 @@ class AnalyseView extends Component {
 
     return (
       <section className="hero">
-        <div className="hero-body">
+        <div className="hero-body" style={heroStyle}>
           <div className="container">
             <h1 className="title is-size-1">
               Pinocchio
             </h1>
             <p className="subtitle">
-              Pinocchio verifies your claims  against a corpus of COVID-19 news articles published in
-              China, Hong Kong, South Korea and Singapore from <span className="has-text-info">1 April 2020</span>
-              to <span className="has-text-info"> 30 April 2020</span>. You can check claims like:
+              Pinocchio verifies your claims  against a corpus of COVID-19 news
+              articles published in China, Hong Kong, South Korea and Singapore from &nbsp;
+              <span className="has-text-info">1 April 2020</span> to
+              <span className="has-text-info"> 30 April 2020</span>.
+              You can check claims like:
             </p>
             <ul style={listStyle}>
               <li>COVID-19 could spread from animals to humans</li>
@@ -102,11 +132,8 @@ class AnalyseView extends Component {
   }
 
   renderAnalyseInput() {
-    const style = {
-      padding: '0 1.25em',
-    }
     return (
-      <div style={style} className="columns">
+      <div className="columns">
         <div className="is-10 column">
           <input
             placeholder="Copy some news from anywhere on the web to try!"
@@ -127,11 +154,29 @@ class AnalyseView extends Component {
     );
   }
 
+  renderError() {
+    const { error } = this.state;
+    if (!error) {
+      return null;
+    }
+
+    return (
+      <article className="message is-danger">
+        <div className="message-header">
+          <p>Error</p>
+        </div>
+        <div className="message-body">
+          {error}
+        </div>
+      </article>
+    );
+  }
+
   renderAnalyseResult() {
     const { isAnalysing, analyseResult } = this.state;
     if (isAnalysing) {
       return (
-        <div className="text-analyse-result-loader">
+        <div className="has-text-centered">
           <img src='/assets/block-loading.gif' />
         </div>
       );
@@ -141,7 +186,9 @@ class AnalyseView extends Component {
       return null;
     }
 
-    return <AnalyseEvidencePanel analyseResult={analyseResult} />
+    return (
+      <AnalyseEvidencePanel analyseResult={analyseResult} />
+    );
   }
 
   render() {
@@ -154,6 +201,7 @@ class AnalyseView extends Component {
       <section style={containerStyle} className="container">
         {this.renderHeader()}
         {this.renderAnalyseInput()}
+        {this.renderError()}
         {this.renderAnalyseResult()}
       </section>
     );

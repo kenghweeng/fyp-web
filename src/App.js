@@ -13,17 +13,13 @@ class App extends Component {
       <div>
         <Navbar />
         <div className="container is-fluid">
-          <div className="row">
-            <div className="col-12 col-sm-12 col-md-12">
-              <Switch>
-                <Route path="/" exact component={AnalyseView}/>
-                <Route path="/articles" component={FeedView}/>
-                <Route path="/article/:id" component={ArticleView}/>
-              </Switch>
-            </div>
+          <Switch>
+            <Route path="/" exact component={AnalyseView}/>
+            <Route path="/articles" component={FeedView}/>
+            <Route path="/article/:id" component={ArticleView}/>
+          </Switch>
           </div>
         </div>
-      </div>
     );
   }
 }

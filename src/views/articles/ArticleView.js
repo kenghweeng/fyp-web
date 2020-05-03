@@ -15,7 +15,6 @@ class ArticleView extends Component {
 
   async componentWillMount() {
     const article = await this.fetchArticle();
-    console.log(article)
     this.setState({ article: article });
   }
 

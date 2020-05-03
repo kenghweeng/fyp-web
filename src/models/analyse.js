@@ -1,11 +1,10 @@
 import { API_HOST } from './_api';
 
 const analyseText = async (text) => {
-  const fetchURL = `${API_HOST}/api/analyse`
+  const fetchURL = `${API_HOST}/api/entailment`
   const fetchBody = {
     text: text
   }
-
   const fetchOptions = {
     method: "POST",
     headers: {
@@ -14,11 +13,16 @@ const analyseText = async (text) => {
     body: JSON.stringify(fetchBody)
   }
 
-  const response = await fetch(fetchURL, fetchOptions)
-  const json = await response.json()
-  const data = json.data;
-
-  return data;
+  try {
+    const response = await fetch(fetchURL, fetchOptions)
+    if (response.status !== 200) {
+      throw Error(response.text())
+    }
+    const json = await response.json()
+    return json;
+  } catch (error) {
+    return { error: String(error) };
+  }
 }
 
 export default {

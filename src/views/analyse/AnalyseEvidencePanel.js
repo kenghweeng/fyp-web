@@ -10,57 +10,54 @@ class AnalyseEvidencePanel extends Component {
     const { analyseResult } = this.props;
 
     return (
-      <div className="text-analyse-result-row">
-          <span className="text-analyse-result-query-label">Query:</span>
-          <span className="text-analyse-result-query-content">{analyseResult.query} </span>
+      <div className="">
+        <span className="has-text-weight-semibold">Query:</span>
+        &nbsp;&nbsp;{analyseResult.query}
       </div>
     );
   }
 
   renderTrustScore() {
     const { analyseResult } = this.props;
-
     let totalScore = 0
     let numEntails = 0
-    let numNeutral = 0
     let numContradict = 0
 
-    for (const article of analyseResult.articlesWithEvidence) {
-      for (const evidence of article.evidence.entailment) {
-        totalScore += evidence.score[0]
+    _.forEach(analyseResult.evidences, (article) => {
+      _.forEach(article.entailment, (evidence) => {
+        totalScore += Number(evidence.score)
         numEntails += 1
-      }
-
-      for (const evidence of article.evidence.contradiction) {
-        totalScore += evidence.score[1]
+      })
+      _.forEach(article.contradiction, (evidence) => {
+        totalScore += Number(evidence.score)
         numContradict += 1
-      }
+      })
+    })
+
+    if (numEntails + numContradict === 0) {
+      return (
+        <div className="text-analyse-result-row">
+          <span className="has-text-weight-semibold">Confidence:</span>
+          &nbsp;&nbsp;-
+        </div>
+      );
     }
+    let finalScore = Math.ceil(totalScore / (numContradict + numEntails) * 100)
 
-    let finalScore = Math.ceil(totalScore / (numContradict + numEntails + numNeutral) * 100)
-
-    let trustScoreColor;
+    let color;
     if (finalScore >= 66) {
-        trustScoreColor = "green"
+      color = "has-text-success"
     } else if (finalScore >= 33) {
-        trustScoreColor = "black"
+      color = "has-text-black"
     } else {
-        trustScoreColor = "red"
-    }
-
-    const trustScoreStyle = {
-        color: trustScoreColor
+      color = "has-text-warning"
     }
 
     return (
       <div className="text-analyse-result-row">
-        <span className="text-analyse-result-query-label">Confidence:</span>
-        <span
-          className="text-analyse-result-query-content"
-          style={trustScoreStyle}
-        >
-          {finalScore}%
-        </span>
+        <span className="has-text-weight-semibold">Confidence:</span>
+        &nbsp;&nbsp;
+        <span className={color}>{finalScore}%</span>
       </div>
     );
   }
@@ -68,25 +65,23 @@ class AnalyseEvidencePanel extends Component {
   renderEntailmentEvidence() {
     const { analyseResult } = this.props;
 
-    const articlesWithEvidence = _.filter(analyseResult.articlesWithEvidence, (article) => {
-      return article.evidence.entailment.length > 0
+    const articlesWithEvidence = _.filter(analyseResult.evidences, (article) => {
+      return article.entailment.length > 0
     })
 
-    const items = _.map(articlesWithEvidence, (article, index) => {
+    const items = _.map(articlesWithEvidence, (evidence, index) => {
       return (
         <EvidenceItem key={index}
-          evidence={article}
-          relatedClaims={article.evidence.entailment}
+          evidence={evidence.article}
+          relatedClaims={evidence.entailment}
         />
       );
     });
 
     return (
-      <div className="text-analyse-result-row">
-        <span className="text-analyse-result-query-label">Supporting:</span>
-        <span className="text-analyse-result-evidence-content">
-          {items}
-        </span>
+      <div className="columns">
+        <p className="column is-2">Supporting:</p>
+        <div className="column">{items}</div>
       </div>
     );
   }
@@ -94,38 +89,44 @@ class AnalyseEvidencePanel extends Component {
   renderContradictionEvidence() {
     const { analyseResult } = this.props;
 
-    const articlesWithEvidence = _.filter(analyseResult.articlesWithEvidence, (article) => {
-      return article.evidence.contradiction.length > 0
+    const articlesWithEvidence = _.filter(analyseResult.evidences, (article) => {
+      return article.contradiction.length > 0
     })
 
-    const items = _.map(articlesWithEvidence, (article, index) => {
+    const items = _.map(articlesWithEvidence, (evidence, index) => {
       return (
         <EvidenceItem key={index}
-          evidence={article}
-          relatedClaims={article.evidence.contradiction}
+          evidence={evidence.article}
+          relatedClaims={evidence.contradiction}
         />
       );
     });
 
     return (
-      <div className="text-analyse-result-row">
-        <span className="text-analyse-result-query-label">Opposing:</span>
-        <span className="text-analyse-result-evidence-content">
-          {items}
-        </span>
+      <div className="columns">
+        <p className="column is-1">Opposing:</p>
+        <div className="column">{items}</div>
       </div>
     );
   }
 
   render() {
+    const { analyseResult } = this.props;
+
+    if (!analyseResult) {
+      return null;
+    }
+
     return (
       <div className="text-analyse-result">
-        <p className="text-analyse-result-query-label">
-          <u>Result:</u>
-        </p>
+        <p className="is-size-4 has-text-weight-semibold"><u>Result</u></p>
+        <br />
         {this.renderQuery()}
+        <br />
         {this.renderTrustScore()}
+        <hr />
         {this.renderEntailmentEvidence()}
+        <hr />
         {this.renderContradictionEvidence()}
       </div>
     );
