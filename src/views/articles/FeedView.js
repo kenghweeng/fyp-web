@@ -42,7 +42,7 @@ class FeedView extends Component {
       articles: articles,
       page: newPage
     });
-    this.props.history.push(`/?p=${newPage}`)
+    this.props.history.push(`/articles?p=${newPage}`)
   }
 
   async paginationPrevOnClick() {
@@ -52,7 +52,7 @@ class FeedView extends Component {
         articles: articles,
         page: newPage
     });
-    this.props.history.push(`/?p=${newPage}`)
+    this.props.history.push(`/articles?p=${newPage}`)
   }
 
   renderPagination() {
