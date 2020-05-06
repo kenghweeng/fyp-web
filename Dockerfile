@@ -8,8 +8,6 @@ COPY package* ./
 RUN npm install
 
 COPY . .
+RUN npm run build
 
-# for node debug
-# ENV DEBUG=* 
-
-CMD ["npm", "start"]
+ENTRYPOINT ["serve", "-s", "build"]
