@@ -110,12 +110,12 @@ class AnalyseView extends Component {
             <p className="subtitle">
               Pinocchio verifies your claims  against a corpus of COVID-19 news
               articles published in Singapore from&nbsp;
-              <span className="has-text-info">14 April 2020.</span>&nbsp;
-              You can check claims like:
+              <span className="has-text-info">1 May 2020.</span>&nbsp;
+              We aim to update the information in weekly intervals, and you can check claims such as:
             </p>
             <ul style={listStyle}>
-              <li>Singapore confirmed 788 new cases of Covid-19</li>
-              <li>Drinking disinfectant can kill coronavirus</li>
+              <li>It is announced that remdesivir significantly improved recovery of Covid-19 patients.</li>
+              <li>Authorities had announced earlier that Singapore will lift Covid-19 restrictions in three phases after the end of the circuit breaker period.</li>
             </ul>
           </div>
           <br />
